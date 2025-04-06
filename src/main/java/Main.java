@@ -1,7 +1,4 @@
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.*;
-import java.util.concurrent.atomic.AtomicInteger;
 
 class main {
     private static final int threadPoolSize = 5;
@@ -9,10 +6,7 @@ class main {
     private static ExecutorService executorService;
     //TODO: Make it a producer consumer problem. Create a new class FileCreator to create the files.
     public static void main(String[] args) throws ExecutionException, InterruptedException {
-        BlockingQueue<File> files = new LinkedBlockingQueue<>();
-        AtomicInteger fileCount = new AtomicInteger();
-        List<Future> fileCreatorFutures = new ArrayList<>();
-        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
+        ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(2);
         executorService = Executors.newFixedThreadPool(threadPoolSize);
         // Create a thread that will create the initial files
         Thread thread = new Thread(() -> {
@@ -21,6 +15,10 @@ class main {
             }
         });
         thread.start();
+        FileWatcher watcher = new FileWatcher();
+        scheduler.scheduleAtFixedRate(watcher, 2, 10, TimeUnit.SECONDS);
+        FileProcessor processor = new FileProcessor();
+        scheduler.scheduleAtFixedRate(processor, 5, 15, TimeUnit.SECONDS);
     }
 
     static void createFiles(int attempt) {

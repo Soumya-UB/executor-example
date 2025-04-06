@@ -3,16 +3,17 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.Instant;
-import java.util.function.Supplier;
 
 public class FileCreator implements Runnable {
 
     @Override
     public void run() {
-        String timeStamp = Instant.EPOCH.toString();
-        Path path = Paths.get(FileAccessData.filePath + "file" + timeStamp + ".txt");
+        Long epochTime = Instant.now().toEpochMilli();
+        Path currentDir = Paths.get("").toAbsolutePath();
+        Path filePath = currentDir.resolve(FileAccessData.filePath + "file" + epochTime + ".txt");
+        System.out.println("filePath: " + filePath);
         try {
-            Files.createFile(path);
+            Files.createFile(filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
