@@ -11,9 +11,10 @@ public class FileCreator implements Runnable {
         Long epochTime = Instant.now().toEpochMilli();
         Path currentDir = Paths.get("").toAbsolutePath();
         Path filePath = currentDir.resolve(FileAccessData.filePath + "file" + epochTime + ".txt");
-        System.out.println("filePath: " + filePath);
+        // System.out.println("filePath: " + filePath);
         try {
             Files.createFile(filePath);
+            System.out.println("created filePath: " + filePath);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
